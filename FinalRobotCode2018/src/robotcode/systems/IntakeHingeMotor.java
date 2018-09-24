@@ -30,9 +30,9 @@ public class IntakeHingeMotor {
 		if (mLeftHinge.getOutputCurrent() > HingeConstants.Motor.MAX_CURRENT || 
 				mLeftEncoder.getAngleDegrees() <= HingeConstants.Motor.LEFT_DOWN + HingeConstants.Motor.MOVE_TOLERANCE) {
 			mLeftHinge.set(0);
-		}
+		} //if it's down
 		else {
-			mLeftHinge.set(0.2);
+			mLeftHinge.set(HingeConstants.Motor.LEFT_DOWN_SPEED);
 		}
 
 		if (mRightHinge.getOutputCurrent() > HingeConstants.Motor.MAX_CURRENT || 
@@ -40,12 +40,15 @@ public class IntakeHingeMotor {
 			mRightHinge.set(0);
 		} 
 		else {
-			mRightHinge.set(0.2);
+			mRightHinge.set(HingeConstants.Motor.RIGHT_DOWN_SPEED);
 		}
 
 		if (mLeftEncoder.getAngleDegrees() <= HingeConstants.Motor.LEFT_DOWN + HingeConstants.Motor.MOVE_TOLERANCE
 				&& mRightEncoder.getAngleDegrees() >= HingeConstants.Motor.RIGHT_DOWN - HingeConstants.Motor.MOVE_TOLERANCE) {
 			mState = HingeState.DOWN;
+		}
+		else {
+			setState();
 		}
 	}
 
@@ -55,7 +58,7 @@ public class IntakeHingeMotor {
 			mLeftHinge.set(0);
 		} 
 		else {
-			mLeftHinge.set(-0.3);
+			mLeftHinge.set(HingeConstants.Motor.LEFT_UP_SPEED);
 		}
 
 		if (mRightHinge.getOutputCurrent() > HingeConstants.Motor.MAX_CURRENT || 
@@ -63,13 +66,16 @@ public class IntakeHingeMotor {
 			mRightHinge.set(0);
 		} 
 		else {
-			mRightHinge.set(-0.2);
+			mRightHinge.set(HingeConstants.Motor.RIGHT_UP_SPEED);
 		}
 
 		if (mLeftEncoder.getAngleDegrees() >= HingeConstants.Motor.LEFT_UP - HingeConstants.Motor.MOVE_TOLERANCE
 				&& mRightEncoder.getAngleDegrees() <= HingeConstants.Motor.RIGHT_UP
 				+ HingeConstants.Motor.MOVE_TOLERANCE) {
 			mState = HingeState.UP;
+		}
+		else{
+			setState();
 		}
 	}
 
@@ -99,7 +105,6 @@ public class IntakeHingeMotor {
 	}
 
 	public HingeState getHingeState() {
-		setState();
 		return mState;
 	}
 

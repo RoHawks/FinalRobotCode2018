@@ -1,14 +1,13 @@
 package constants;
 
 public class ElevatorConstants {
-	public static class PID { // ATS Tune PID
+	public static class PID {
 		public static final double 
-			ELEVATOR_SPEED = 0.5, 
-			ELEVATOR_UP_P = 0.25, 
-			ELEVATOR_UP_I = 0.001, 
+			ELEVATOR_UP_P = 0.07, 
+			ELEVATOR_UP_I = 0.0003,
 			ELEVATOR_UP_D = 0,
-			ELEVATOR_DOWN_P = 0.08, 
-			ELEVATOR_DOWN_I = 0.001, 
+			ELEVATOR_DOWN_P = 0.02, 
+			ELEVATOR_DOWN_I = 0.0003, 
 			ELEVATOR_DOWN_D = 0;
 		
 		public static final int 
@@ -24,8 +23,8 @@ public class ElevatorConstants {
 				SCALE_HEIGHT_LOW = 48,
 				SWITCH_HEIGHT = 24,
 				HINGE_HEIGHT = 20,
-				BOX_HEIGHT = 4.5,
-				TOP = 75; // TZ
+				BOX_HEIGHT = 4.75,
+				TOP = 75;
 	}
 	
 	public static final boolean

@@ -10,7 +10,7 @@ import robotcode.systems.Elevator;
 import robotcode.systems.Grabber;
 import robotcode.systems.IntakeHingeMotor;
 
-public class SwitchSequence implements AutonomousSequence {//ATS Tune
+public class SwitchSequence implements AutonomousSequence {
 	
 	private DriveTrain mDriveTrain;
 	private Elevator mElevator;
@@ -50,7 +50,7 @@ public class SwitchSequence implements AutonomousSequence {//ATS Tune
 			mHinge.up();
 			mGrabber.grab();
 			mDriveTrain.enactMovement(0, actualAngle, LinearVelocity.ANGLE_ONLY, RotationalVelocity.NONE, 0);
-		} // TZ fixed, need to check
+		} 
 
 		if (!wheelAlignEnded) {
 			wheelAlignEnded = true;

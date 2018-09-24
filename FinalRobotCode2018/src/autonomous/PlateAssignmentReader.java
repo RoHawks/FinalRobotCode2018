@@ -28,5 +28,9 @@ public class PlateAssignmentReader {
 			return 'U';//unknown?
 		}
 	}
+	
+	private static int GetDriverStationLocation() {
+		return DriverStation.getInstance().getLocation();
+	}
 
 }

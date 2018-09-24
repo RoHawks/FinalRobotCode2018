@@ -21,8 +21,8 @@ public class DriveConstants {
 		public static final double 
 			SPEED_MULT = 1.0,
 			ANGULAR_SPEED_MULT = 1.0,
-			NUDGE_MOVE_SPEED = 0.2,
-			NUDGE_TURN_SPEED = 0.2;
+			NUDGE_MOVE_SPEED = 0.3,
+			NUDGE_TURN_SPEED = 0.3;
 	}
 
 	public static class Modules {
@@ -41,8 +41,8 @@ public class DriveConstants {
 	public static class PID_Constants {
 
 		public static final double[] 
-			ROTATION_P = new double[] { 1.0, 1.0, 1.0, 1.0 },//{ 0.91, 0.91, 0.91, 0.91 },
-			ROTATION_I = new double[] { 0.001, 0.001, 0.001, 0.001 },//{ 0.023, 0.0025, 0.0025, 0.03 },
+			ROTATION_P = new double[] { 1, 1, 1, 1 },//{ 0.91, 0.91, 0.91, 0.91 }, //{ 1.0, 1.0, 1.0, 1.0 },
+			ROTATION_I = new double[] { 0.001, 0.001, 0.001, 0.001 },//{ 0.002, 0.002, 0.002, 0.002 },//{ 0.023, 0.0025, 0.0025, 0.03 },
 			ROTATION_D = new double[] { 0, 0, 0, 0 };
 
 		public static final int[]
@@ -51,11 +51,11 @@ public class DriveConstants {
 
 		// for turning robot to an angle
 		public static final double
-			GYRO_P = 0.01, //CHANGED WITH PROTOTYPE CHANGE BACK FOR REAL TZ 0.0085
-			GYRO_I = 0.0003,//Changed was 0
+			GYRO_P = 0.0085, //0.01 -- prototype
+			GYRO_I = 0, //0.0003 -- prototype
 			GYRO_D = 0,
 			GYRO_TOLERANCE = 5,
-			GYRO_MAX_SPEED = 1;//CHANGED TZ was 0.7
+			GYRO_MAX_SPEED = 0.7; //1 -- prototype
 		
 		public static final double
 			DRIFT_COMP_P = 0.08,

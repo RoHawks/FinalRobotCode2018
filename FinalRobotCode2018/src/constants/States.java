@@ -7,7 +7,6 @@ public enum States {
 	On_Way_To_Exchange,
 	Exchange_Score,
 	On_Way_To_Score_Switch,
-	On_Way_To_Score_Scale,
 	Score,
 	Defense,
 	Manual_Elevator_Control,

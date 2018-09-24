@@ -36,6 +36,18 @@ public class ParameterizedPathCommand extends BaseAutonomousCommand {
 		mTotalTime = pTotalTime;
 	}
 	
+	public ParameterizedPathCommand(DriveTrain pDriveTrain, double pCosA, double pCosC, double pSinA, double pSinC,
+			double pTotalTime, double pAngle) {
+		mDriveTrain = pDriveTrain;
+		mCosA = pCosA;
+		mCosB = pAngle/pTotalTime;
+		mCosC = pCosC;
+		mSinA = pSinA;
+		mSinB = pAngle/pTotalTime;
+		mSinC = pSinC;
+		mTotalTime = pTotalTime;
+	}
+	
 	@Override
 	public boolean RunCommand() {
 		if (!mTimeStartSet) {
@@ -49,8 +61,8 @@ public class ParameterizedPathCommand extends BaseAutonomousCommand {
 		SmartDashboard.putNumber("X comp", xComp);
 		SmartDashboard.putNumber("y comp", yComp);
 		SmartDashboard.putNumber("Path angle", -linearV.getAngle() + 90);
-		SmartDashboard.putNumber("Path magnitude", linearV.getMagnitude()*100);
-		mDriveTrain.enactMovement(0, -linearV.getAngle() + 90, LinearVelocity.NORMAL, RotationalVelocity.NONE, linearV.getMagnitude()*100);
+		SmartDashboard.putNumber("Path magnitude", linearV.getMagnitude());
+		mDriveTrain.enactMovement(0, -linearV.getAngle() + 90, LinearVelocity.NORMAL, RotationalVelocity.NONE, linearV.getMagnitude());
 		return currentTime > mTotalTime;
 	}
 

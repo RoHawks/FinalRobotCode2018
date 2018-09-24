@@ -19,6 +19,8 @@ public class Elevator {
 	private ElevatorDirection mElevatorDir = ElevatorDirection.NONE;
 
 	private boolean mIsEnabled = true;
+	
+	private double mCurrentPosition;
 
 	public boolean IsEnabled() {
 		return mIsEnabled;
@@ -28,10 +30,11 @@ public class Elevator {
 		mIsEnabled = pIsEnabled;
 	}
 
-	public Elevator(TalonInterface mElevatorTalon, ElevatorEncoder pEncoder, Joystick pJoystick) {
+	public Elevator(TalonInterface pMotor, ElevatorEncoder pEncoder, Joystick pJoystick) {
 		mEncoder = pEncoder;
-		mMotor = mElevatorTalon;
+		mMotor = pMotor;
 		mJoystick = pJoystick;
+		mCurrentPosition = mEncoder.getRawTicks();
 	}
 
 	public enum ElevatorState {
@@ -88,18 +91,26 @@ public class Elevator {
 		return mMotor.getSensorCollection_isRevLimitSwitchClosed();
 	}
 
+	public void setCurrentPosition() {
+		mCurrentPosition = mEncoder.getRawTicks();
+	}
+	
 	public void stop() {
 		setSpeed(0);
 	}
 
 	public void setGround() {
 		mElevatorState = ElevatorState.GROUND;
-		// if (mIsEnabled) {
-		// mMotor.set(ControlMode.PercentOutput, -0.6);
-		// } else {
-		// mMotor.set(ControlMode.PercentOutput, 0);
-		// }
-		moveElevator(ElevatorConstants.Heights.GROUND); // TZ should work with pid...
+		//moveElevator(ElevatorConstants.Heights.GROUND);
+		if(IsAtBottom()) {
+			mMotor.set(0);
+		}
+		else if(isCloseToTarget(ElevatorConstants.Heights.GROUND, 7)) {
+			mMotor.set(-0.3);
+		}
+		else {
+			mMotor.set(-0.8);
+		}
 	}
 
 	public void setSwitch() {
@@ -146,25 +157,28 @@ public class Elevator {
 		mElevatorState = ElevatorState.JOYSTICK;
 		setElevatorDirection();
 		ElevatorDirection dir = getElevatorDirection();
-		if (Math.abs(mJoystick.getY()) > 0.25 && mIsEnabled) {
+		SmartDashboard.putNumber("Joystick2 Y", mJoystick.getY());
+		if(mMotor.getSensorCollection_isFwdLimitSwitchClosed() || Math.abs(mJoystick.getY()) < 0.25) {
+			mMotor.set(ControlMode.Position, mCurrentPosition - 60);
+			SmartDashboard.putString("Is in Advanced joystick PID loop", "yes");
+		}
+		else if (Math.abs(mJoystick.getY()) > 0.25 && mIsEnabled) {
 			double speed = -mJoystick.getY() * mJoystick.getY() * Math.signum(mJoystick.getY());
-			if (dir == ElevatorDirection.UP && isCloseToTarget(ElevatorConstants.Heights.TOP, 15)) {
+			if (dir == ElevatorDirection.UP && isCloseToTarget(ElevatorConstants.Heights.TOP, 5)) {
 				speed *= 0.5;
 			}
-			else if (dir == ElevatorDirection.UP && isCloseToTarget(ElevatorConstants.Heights.TOP, 5)) {
-				speed *= 0.15;
-			}
-			else if (dir == ElevatorDirection.DOWN && isCloseToTarget(ElevatorConstants.Heights.GROUND, 15)) {
-				speed *= 0.3;
-			}
 			else if (dir == ElevatorDirection.DOWN && isCloseToTarget(ElevatorConstants.Heights.GROUND, 5)) {
-				speed *= 0.1;
+				speed *= 0.5;
 			}
 			mMotor.set(speed);
+			mCurrentPosition = mEncoder.getRawTicks();
+			SmartDashboard.putString("Is in Advanced joystick PID loop", "no");
 		}
 		else {
 			mMotor.set(0);
-		} // TZ check
+			mCurrentPosition = mEncoder.getRawTicks();
+			SmartDashboard.putString("Is in Advanced joystick PID loop", "no");
+		}
 	}
 
 	/**
@@ -181,6 +195,7 @@ public class Elevator {
 			mMotor.set(ControlMode.Position, goal);
 			SmartDashboard.putNumber("Elevator Raw Ticks", mEncoder.getRawTicks());
 			SmartDashboard.putNumber("Elevator Error", ElevatorEncoder.TickToInch(mEncoder.getRawTicks() - goal));
+			SmartDashboard.putNumber("Elevator Error from Talon", mMotor.getClosedLoopError(0)); //TZDC Check
 			SmartDashboard.putNumber("Talon error value", mMotor.getClosedLoopError(0));
 			SmartDashboard.putNumber("Elevator motor output", mMotor.getMotorOutputVoltage());
 			SmartDashboard.putNumber("Elevator Talon Current", mMotor.getOutputCurrent());
@@ -266,11 +281,19 @@ public class Elevator {
 	public boolean isAboveTarget() {
 		return getHeightInches() > this.getHeightGoal(mElevatorState);
 	}
+	
+	public boolean isCloseToTargetUsingPID() {
+		return isCloseToTargetUsingPID(200);
+	}
+	
+	public boolean isCloseToTargetUsingPID(double pTickTolerance) {
+		return mMotor.getClosedLoopError(0) < pTickTolerance;
+	}
 
 	public boolean isCloseToTarget() {
 		SmartDashboard.putNumber("Height Goal -- close to target", this.getHeightGoal(mElevatorState));
 		SmartDashboard.putNumber("Height Inches -- close to target", getHeightInches());
-		return isCloseToTarget(getHeightGoal(mElevatorState), 0.5);// TZ tolerance
+		return isCloseToTarget(getHeightGoal(mElevatorState), 1);
 	}
 
 	public boolean isCloseToTarget(double pHeight, double pTolerance) { // Everything in inches

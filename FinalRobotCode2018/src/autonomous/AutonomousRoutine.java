@@ -5,6 +5,6 @@ import java.util.ArrayList;
 import autonomous.commands.AutonomousCommand;
 
 public interface AutonomousRoutine {
-	ArrayList<AutonomousCommand> GetAutonomousCommands();
+	ArrayList<AutonomousCommand> getAutonomousCommands();
 
 }

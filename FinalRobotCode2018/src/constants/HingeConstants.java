@@ -25,22 +25,30 @@ public class HingeConstants {
 		public static final double MAX_CURRENT = 5;
 		
 		public static final double
-			HINGE_P_DOWN = 0.1,
-			HINGE_I_DOWN = 0.001,
-			HINGE_D_DOWN = 100,	
-			HINGE_P_UP = 0.5,
-			HINGE_I_UP = 0.005,
-			HINGE_D_UP = 0;
+			LEFT_UP_SPEED = -0.3,
+			LEFT_DOWN_SPEED = 0.3,
+			RIGHT_UP_SPEED = -0.25,
+			RIGHT_DOWN_SPEED = 0.3;
 		
-		public static final int
-			LEFT_HINGE_TOLERANCE_DOWN = 50,
-			LEFT_HINGE_IZONE_DOWN = 100,
-			RIGHT_HINGE_TOLERANCE_DOWN = 50,
-			RIGHT_HINGE_IZONE_DOWN= 100,
-			LEFT_HINGE_TOLERANCE_UP = 100,
-			LEFT_HINGE_IZONE_UP = 100,
-			RIGHT_HINGE_TOLERANCE_UP = 50,
-			RIGHT_HINGE_IZONE_UP = 100;
+		public static class PID{ //we don't set hinge by position -- unused
+			public static final double
+				HINGE_P_DOWN = 0.1,
+				HINGE_I_DOWN = 0.001,
+				HINGE_D_DOWN = 100,	
+				HINGE_P_UP = 0.8,
+				HINGE_I_UP = 0.005,
+				HINGE_D_UP = 0;
+		
+			public static final int
+				LEFT_HINGE_TOLERANCE_DOWN = 50,
+				LEFT_HINGE_IZONE_DOWN = 100,
+				RIGHT_HINGE_TOLERANCE_DOWN = 50,
+				RIGHT_HINGE_IZONE_DOWN= 100,
+				LEFT_HINGE_TOLERANCE_UP = 100,
+				LEFT_HINGE_IZONE_UP = 100,
+				RIGHT_HINGE_TOLERANCE_UP = 50,
+				RIGHT_HINGE_IZONE_UP = 100;
+		}
 	}
 	
 	public static class Piston {

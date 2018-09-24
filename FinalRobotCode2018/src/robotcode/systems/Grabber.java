@@ -11,6 +11,7 @@ public class Grabber {
 	public Grabber(simulator.solenoid.SolenoidInterface pGrab, simulator.solenoid.SolenoidInterface pExtend) {
 		mGrab = pGrab;
 		mExtend = pExtend;
+		setState();
 	}
 
 	public enum GrabberState {
@@ -63,6 +64,30 @@ public class Grabber {
 		else if (mGrab.get() == GrabberConstants.RELEASE && mExtend.get() == GrabberConstants.OUT) {
 			mGrabberState = GrabberState.OUT_RELEASE;
 		}
+	}
+	
+	public void setState(GrabberState pGrabberState) {
+		switch(pGrabberState) {
+		case IN_GRAB:
+			in();
+			grab();
+			break;
+		case IN_RELEASE:
+			in();
+			release();
+			break;
+		case OUT_GRAB:
+			out();
+			grab();
+			break;
+		case OUT_RELEASE:
+			out();
+			release();
+			break;
+		default:
+			break;
+		}
+		mGrabberState = pGrabberState;
 	}
 
 	public Value getGrab() {

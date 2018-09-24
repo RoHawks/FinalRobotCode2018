@@ -1,4 +1,4 @@
-package autonomous.rountines;
+package autonomous.routines;
 
 import java.util.ArrayList;
 
@@ -9,11 +9,12 @@ import autonomous.commands.ScoreCommand;
 import autonomous.commands.StopCommand;
 import autonomous.commands.StraightLineDriveCommand;
 import autonomous.commands.TurnWheelsToAngle;
+import constants.ElevatorConstants;
 import robotcode.driving.DriveTrain;
 import robotcode.systems.Elevator;
 import robotcode.systems.Grabber;
 
-public class SwitchRoutine implements AutonomousRoutine {// ATS Tune
+public class SwitchRoutine implements AutonomousRoutine {
 	private final double WHEEL_ANGLE = 45;
 	private final double ACCELERATE_TO_SPEED = 0.6;
 	private final long ACCELERATION_TIME = 1000;
@@ -34,7 +35,7 @@ public class SwitchRoutine implements AutonomousRoutine {// ATS Tune
 	}
 
 	@Override
-	public ArrayList<AutonomousCommand> GetAutonomousCommands() {
+	public ArrayList<AutonomousCommand> getAutonomousCommands() {
 		char nearbySwitchSide = PlateAssignmentReader.GetNearSwitchSide();
 
 		double wheelAngle = nearbySwitchSide == 'R' ? 1.0 : -1.0 * WHEEL_ANGLE;
@@ -47,7 +48,7 @@ public class SwitchRoutine implements AutonomousRoutine {// ATS Tune
 		//Accelerate
 		returnValue.add(new StraightLineDriveCommand(
 				mDriveTrain,
-				mElevator,
+				mElevator, ElevatorConstants.Heights.SWITCH_HEIGHT,
 				wheelAngle,
 				0.0,
 				ACCELERATE_TO_SPEED,
@@ -56,7 +57,7 @@ public class SwitchRoutine implements AutonomousRoutine {// ATS Tune
 		//Drive full speed
 		returnValue.add(new StraightLineDriveCommand(
 				mDriveTrain,
-				mElevator,
+				mElevator, ElevatorConstants.Heights.SWITCH_HEIGHT,
 				wheelAngle,
 				ACCELERATE_TO_SPEED,
 				ACCELERATE_TO_SPEED,
@@ -65,7 +66,7 @@ public class SwitchRoutine implements AutonomousRoutine {// ATS Tune
 		//Slow down then stop
 		returnValue.add(new StraightLineDriveCommand(
 				mDriveTrain,
-				mElevator,
+				mElevator, ElevatorConstants.Heights.SWITCH_HEIGHT,
 				wheelAngle,
 				ACCELERATE_TO_SPEED,
 				0.0,
@@ -79,7 +80,7 @@ public class SwitchRoutine implements AutonomousRoutine {// ATS Tune
 		//drive backwards a bit
 		returnValue.add(new StraightLineDriveCommand(
 				mDriveTrain,
-				mElevator,
+				mElevator, ElevatorConstants.Heights.SWITCH_HEIGHT,
 				wheelAngle + 180,
 				0,
 				DRIVE_BACKWARDS_SPEED,

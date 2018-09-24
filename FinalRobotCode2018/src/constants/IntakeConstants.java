@@ -4,9 +4,9 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class IntakeConstants {
 
-	public static final Value
-		OPEN = Value.kReverse,
-		CLOSED = Value.kForward;
+	public static final Value //CHANGED AT NY QF
+		OPEN = Value.kForward,//Value.kReverse, 
+		CLOSED = Value.kReverse;//Value.kForward;
 
 	// break beam normally open or closed
 	public static final boolean 
@@ -19,8 +19,9 @@ public class IntakeConstants {
 
 	public static final double 
 		INTAKE_WHEEL_SPEED = 1,
-		EJECT_WHEEL_SPEED = -0.6;
+		EJECT_WHEEL_SPEED = -0.6,
+		INTAKE_HOLD_SPEED = 0.3;
 
-	public static final long FLIP_TIME_MS = 500;
+	public static final long FLIP_TIME_MS = 800;
 
 }

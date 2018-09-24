@@ -41,16 +41,15 @@ public class Intake {
 		mIntakeState = IntakeState.FLAP;
 		
 		boolean flipSide = (System.currentTimeMillis() - mTimeWhenEnteredFlip) % IntakeConstants.FLIP_TIME_MS > IntakeConstants.FLIP_TIME_MS / 2;
-		mRightPiston.set(flipSide ? Value.kForward : Value.kReverse);
-		mLeftPiston.set((flipSide ? Value.kForward : Value.kReverse));
-		//TZ test for all the different possibilities
+		mRightPiston.set(flipSide ? Value.kReverse : Value.kForward);//Value.kForward : Value.kReverse);
+		mLeftPiston.set(flipSide ? Value.kReverse : Value.kForward);//Value.kForward : Value.kReverse)); 
 		
 		mLeftWheel.set(ControlMode.PercentOutput, IntakeConstants.INTAKE_WHEEL_SPEED);
 		mRightWheel.set(ControlMode.PercentOutput, IntakeConstants.INTAKE_WHEEL_SPEED);
 	}
 	
 	boolean button_pressed = false;
-	//ATS wheels run every 5 seconds for 1 second to push cube back in
+	
 	public void hold() {
 		mIntakeState = IntakeState.CLOSED;
 		closeMovePistons();

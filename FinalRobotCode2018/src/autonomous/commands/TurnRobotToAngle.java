@@ -17,7 +17,7 @@ public class TurnRobotToAngle extends BaseAutonomousCommand {
 	public boolean RunCommand() {
 		mDriveTrain.enactMovement(mAngle, mDriveTrain.getDesiredRobotVel().getAngle(), LinearVelocity.NONE,
 				RotationalVelocity.POV, 0.0);
-		return mDriveTrain.gyroInRange(); // TZ changed
+		return mDriveTrain.gyroInRange();
 	}
 
 }

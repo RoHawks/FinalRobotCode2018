@@ -31,14 +31,13 @@ public class Ports {
 		public static final int 
 			RIGHT_INTAKE_HINGE = 16,
 			LEFT_INTAKE_HINGE = 12,
-			HINGE_PISTON = 0; //TZ check
+			HINGE_PISTON = 0;
 	}
 	
 	public static class Elevator {
 
 		public static final int 
-			ELEVATOR_LEAD = 2,//Elevator talon
-			FOLLOWER = 14; //ATS CHANGE
+			ELEVATOR = 2;//Elevator talon
 	}
 
 	public static class Grabber {
@@ -53,7 +52,7 @@ public class Ports {
 
 	// controllers
 	public static final int
-		XBOX = 0,
+		XBOX = 5, //was 0 before for 360 controller, 5 is for xbox one controller
 		JOYSTICK = 1;
 
 	public static final int COMPRESSOR = 0;
