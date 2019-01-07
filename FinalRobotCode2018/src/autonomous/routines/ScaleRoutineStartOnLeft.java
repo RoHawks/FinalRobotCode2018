@@ -21,6 +21,7 @@ import robotcode.systems.Grabber;
 import robotcode.systems.Grabber.GrabberState;
 import robotcode.systems.Intake;
 import robotcode.systems.IntakeHingeMotor;
+import robotcode.systems.IntakeHingePiston;
 
 public class ScaleRoutineStartOnLeft implements AutonomousRoutine {
 	
@@ -28,15 +29,15 @@ public class ScaleRoutineStartOnLeft implements AutonomousRoutine {
 	private Elevator mElevator;	
 	private Grabber mGrabber;
 	private Intake mIntake;
-	private IntakeHingeMotor mHinge;
+	private IntakeHingePiston mHinge;
 
 	
-	public ScaleRoutineStartOnLeft(DriveTrain pDriveTrain, Elevator pElevator, Grabber pGrabber, Intake pIntake, IntakeHingeMotor pHinge) {
+	public ScaleRoutineStartOnLeft(DriveTrain pDriveTrain, Elevator pElevator, Grabber pGrabber, Intake pIntake, IntakeHingePiston mHinge2) {
 		mDriveTrain = pDriveTrain;
 		mElevator = pElevator;
 		mGrabber = pGrabber;
 		mIntake = pIntake;
-		mHinge = pHinge;
+		mHinge = mHinge2;
 	}
 	
 	@Override

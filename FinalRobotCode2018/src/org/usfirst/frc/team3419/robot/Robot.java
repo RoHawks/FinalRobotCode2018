@@ -49,6 +49,7 @@ import robotcode.systems.Elevator;
 import robotcode.systems.Grabber;
 import robotcode.systems.Intake;
 import robotcode.systems.IntakeHingeMotor;
+import robotcode.systems.IntakeHingePiston;
 import robotcode.systems.SingleSolenoidReal;
 import sensors.ElevatorEncoder;
 import sensors.RobotAngle;
@@ -89,10 +90,11 @@ public class Robot extends SampleRobot {
 	private DigitalInputInterface mLimitSwitch, mBreakbeam;
 
 	private TalonInterface mLeftIntakeWheel, mRightIntakeWheel;
-	// private simulator.solenoid.SolenoidInterface mHingePiston;
+	private simulator.solenoid.SolenoidInterface mHingePiston;
+	private IntakeHingePiston mHinge;
 	private Intake mIntake;
 	private TalonInterface mRightIntakeHinge, mLeftIntakeHinge;
-	private IntakeHingeMotor mHinge;
+	//private IntakeHingeMotor mHinge;
 
 	private TalonInterface mElevatorTalon;
 	private ElevatorEncoder mElevEncoder;
@@ -106,6 +108,8 @@ public class Robot extends SampleRobot {
 	private States mCurrentState = States.Initial_If_Holding_Box;
 	private States mInitialState = States.Initial_If_Holding_Box;
 
+	private long mTimeLastCycleStarted;
+	
 	private AutonomousRoutines mAutonomousRoutine = AutonomousRoutines.SWITCH_SCORE;
 	
 	public Robot() {
@@ -201,8 +205,13 @@ public class Robot extends SampleRobot {
 
 	public void operatorControl() {
 		startGame();
-		SmartDashboard.putBoolean("breakbeam", mBreakbeam.get());
+		mTimeLastCycleStarted = System.currentTimeMillis();
+		//SmartDashboard.putBoolean("breakbeam", mBreakbeam.get());
 		while (isOperatorControl() && isEnabled()) {
+			long timeCycleStart = System.currentTimeMillis();
+			long lastCycleTime = timeCycleStart = mTimeLastCycleStarted;
+			SmartDashboard.putNumber("Cycle Time", lastCycleTime);
+			mTimeLastCycleStarted = timeCycleStart;
 			log();
 			
 			if(RunConstants.RUNNING_DRIVE) {
@@ -247,6 +256,10 @@ public class Robot extends SampleRobot {
 			if(RunConstants.RUNNING_GRABBER) {
 				SmartDashboard.putString("Grabber L-R", mGrabber.getGrab().equals(Value.kReverse) ? "Grab" : "Release");
 				SmartDashboard.putString("Grabber F-B", mGrabber.getExtend().equals(Value.kReverse) ? "In" : "Out");
+			}
+			
+			for (int i = 1; i < 12; i++) {
+				SmartDashboard.putBoolean("Button" + i, mJoystick.getRawButton(i));
 			}
 			
 			Timer.delay(0.005); // wait for a motor update time
@@ -354,7 +367,6 @@ public class Robot extends SampleRobot {
 	private boolean mPickingUpBoxHasStartedGrab = false;
 	
 	private void On_Way_To_Score_Switch() {
-		
 
 		if (mElevator.IsAtBottom()) {
 			SmartDashboard.putNumber("Grab time", System.currentTimeMillis());
@@ -407,7 +419,7 @@ public class Robot extends SampleRobot {
 		else if (mJoystick.getRawButton(JoystickConstants.MANUAL_ELEVATOR_CONTROL)) {
 			SetNewState(States.Manual_Elevator_Control);
 		} 
-		else if (mJoystick.getRawButton(JoystickConstants.HUNTING)) {
+		else if (mJoystick.getRawButton(JoystickConstants.HUNTING)) { //TZ
 			SetNewState(States.Hunting);
 		}
 	}
@@ -458,7 +470,7 @@ public class Robot extends SampleRobot {
 		if (mJoystick.getRawButton(JoystickConstants.SCORE)) {
 			mDriveHasHitOnWayToExchange_ExchangeScoreButtonPressed = true;
 		}
-		else if (mJoystick.getRawButton(JoystickConstants.PREPARE_TO_SCORE_ON_SWITCH)) {
+		else if (mJoystick.getRawButton(JoystickConstants.PREPARE_TO_SCORE_ON_SWITCH)) { //TZ
 			mDriveHasHitOnWayToExchange_OnWayToScoreSwitchButtonPressed = true;
 		} 
 		else if (mJoystick.getRawButton(JoystickConstants.HUNTING)) {
@@ -531,7 +543,7 @@ public class Robot extends SampleRobot {
 		else if (!mBreakbeam.get() && GetMillisIntoState() > 3000) {
 			SetNewState(States.Breakbeam_Tripped);
 		}
-		else if (mJoystick.getRawButtonReleased(JoystickConstants.DEFENSE)) {
+		else if (mJoystick.getRawButton(JoystickConstants.DEFENSE)) {
 			SetNewState(States.Defense);
 		}
 	}
@@ -542,7 +554,7 @@ public class Robot extends SampleRobot {
 		mElevator.setSwitch();
 		mIntake.disable();
 		mHinge.up();
-		if (mJoystick.getRawButtonReleased(JoystickConstants.DEFENSE)) {
+		if (mJoystick.getRawButton(JoystickConstants.DEFENSE)) {
 			SetNewState(States.Hunting);
 		}
 	}
@@ -738,31 +750,31 @@ public class Robot extends SampleRobot {
 		mIntake = new Intake(mLeftIntakeWheel, mRightIntakeWheel, mLeftPiston, mRightPiston, mLimitSwitch, mBreakbeam,
 				mJoystick);
 
-		mRightIntakeHinge = GetTalonObject(Ports.Hinge.RIGHT_INTAKE_HINGE);
-		mRightIntakeHinge.setInverted(HingeConstants.Motor.RIGHT_REVERSED);
-		mRightIntakeHinge.setNeutralMode(NeutralMode.Brake);
-		mRightIntakeHinge.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
-		mRightIntakeHinge.setSensorPhase(HingeConstants.Motor.RIGHT_ENCODER_REVERSED);
-		mRightIntakeHinge.config_kP(0, HingeConstants.Motor.PID.HINGE_P_DOWN, 10);
-		mRightIntakeHinge.config_kI(0, HingeConstants.Motor.PID.HINGE_I_DOWN, 10);
-		mRightIntakeHinge.config_kD(0, HingeConstants.Motor.PID.HINGE_D_DOWN, 10);
-		mRightIntakeHinge.config_IntegralZone(0, HingeConstants.Motor.PID.RIGHT_HINGE_IZONE_DOWN, 10);
-		mRightIntakeHinge.configAllowableClosedloopError(0, HingeConstants.Motor.PID.RIGHT_HINGE_TOLERANCE_DOWN, 10);
-
-		mLeftIntakeHinge = GetTalonObject(Ports.Hinge.LEFT_INTAKE_HINGE);
-		mLeftIntakeHinge.setInverted(HingeConstants.Motor.LEFT_REVERSED);
-		mLeftIntakeHinge.setNeutralMode(NeutralMode.Brake);
-		mLeftIntakeHinge.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
-		mLeftIntakeHinge.setSensorPhase(HingeConstants.Motor.LEFT_ENCODER_REVERSED);
-		mLeftIntakeHinge.config_kP(0, HingeConstants.Motor.PID.HINGE_P_DOWN, 10);
-		mLeftIntakeHinge.config_kI(0, HingeConstants.Motor.PID.HINGE_I_DOWN, 10);
-		mLeftIntakeHinge.config_kD(0, HingeConstants.Motor.PID.HINGE_D_DOWN, 10);
-		mLeftIntakeHinge.config_IntegralZone(0, HingeConstants.Motor.PID.LEFT_HINGE_IZONE_DOWN, 10);
-		mLeftIntakeHinge.configAllowableClosedloopError(0, HingeConstants.Motor.PID.LEFT_HINGE_TOLERANCE_DOWN, 10);
-
-		mHinge = new IntakeHingeMotor(mLeftIntakeHinge, mRightIntakeHinge);
-		// mHingePiston = GetSolenoidObject(Ports.Hinge.HINGE_PISTON);
-		// mHinge = new IntakeHingePiston(mHingePiston);
+//		mRightIntakeHinge = GetTalonObject(Ports.Hinge.RIGHT_INTAKE_HINGE);
+//		mRightIntakeHinge.setInverted(HingeConstants.Motor.RIGHT_REVERSED);
+//		mRightIntakeHinge.setNeutralMode(NeutralMode.Brake);
+//		mRightIntakeHinge.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
+//		mRightIntakeHinge.setSensorPhase(HingeConstants.Motor.RIGHT_ENCODER_REVERSED);
+//		mRightIntakeHinge.config_kP(0, HingeConstants.Motor.PID.HINGE_P_DOWN, 10);
+//		mRightIntakeHinge.config_kI(0, HingeConstants.Motor.PID.HINGE_I_DOWN, 10);
+//		mRightIntakeHinge.config_kD(0, HingeConstants.Motor.PID.HINGE_D_DOWN, 10);
+//		mRightIntakeHinge.config_IntegralZone(0, HingeConstants.Motor.PID.RIGHT_HINGE_IZONE_DOWN, 10);
+//		mRightIntakeHinge.configAllowableClosedloopError(0, HingeConstants.Motor.PID.RIGHT_HINGE_TOLERANCE_DOWN, 10);
+//
+//		mLeftIntakeHinge = GetTalonObject(Ports.Hinge.LEFT_INTAKE_HINGE);
+//		mLeftIntakeHinge.setInverted(HingeConstants.Motor.LEFT_REVERSED);
+//		mLeftIntakeHinge.setNeutralMode(NeutralMode.Brake);
+//		mLeftIntakeHinge.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
+//		mLeftIntakeHinge.setSensorPhase(HingeConstants.Motor.LEFT_ENCODER_REVERSED);
+//		mLeftIntakeHinge.config_kP(0, HingeConstants.Motor.PID.HINGE_P_DOWN, 10);
+//		mLeftIntakeHinge.config_kI(0, HingeConstants.Motor.PID.HINGE_I_DOWN, 10);
+//		mLeftIntakeHinge.config_kD(0, HingeConstants.Motor.PID.HINGE_D_DOWN, 10);
+//		mLeftIntakeHinge.config_IntegralZone(0, HingeConstants.Motor.PID.LEFT_HINGE_IZONE_DOWN, 10);
+//		mLeftIntakeHinge.configAllowableClosedloopError(0, HingeConstants.Motor.PID.LEFT_HINGE_TOLERANCE_DOWN, 10);
+//
+//		mHinge = new IntakeHingePisto(mLeftIntakeHinge, mRightIntakeHinge);
+		mHingePiston = GetSolenoidObject(Ports.Hinge.HINGE_PISTON);
+		mHinge = new IntakeHingePiston(mHingePiston);
 	}
 
 	public void ElevInit() {
@@ -1072,18 +1084,18 @@ public class Robot extends SampleRobot {
 			addLogValueDouble(logString, mRightIntakeWheel.getOutputCurrent());
 			addLogValueDouble(logString, mRightIntakeWheel.getMotorOutputVoltage());
 
-			// addLogValueString(logString, mHingePiston.get().toString());
+			addLogValueString(logString, mHingePiston.get().toString());
 
 			addLogValueString(logString, mLeftPiston.get().toString());
 			addLogValueString(logString, mRightPiston.get().toString());
 
 			addLogValueString(logString, mIntake.getIntakeState().toString());
 			
-			addLogValueDouble(logString, mLeftIntakeHinge.getOutputCurrent());
-			addLogValueDouble(logString, mLeftIntakeHinge.getMotorOutputVoltage());
-			
-			addLogValueDouble(logString, mRightIntakeHinge.getOutputCurrent());
-			addLogValueDouble(logString, mRightIntakeHinge.getMotorOutputVoltage());
+//			addLogValueDouble(logString, mLeftIntakeHinge.getOutputCurrent());
+//			addLogValueDouble(logString, mLeftIntakeHinge.getMotorOutputVoltage());
+//			
+//			addLogValueDouble(logString, mRightIntakeHinge.getOutputCurrent());
+//			addLogValueDouble(logString, mRightIntakeHinge.getMotorOutputVoltage());
 			
 //			addLogValueString(logString, mHinge.getHingeState().name());
 			
@@ -1130,19 +1142,3 @@ public class Robot extends SampleRobot {
 		SmartDashboard.putString("LogString", logString.toString());
 	}
 }
-
-
-/*
-
-
-
-
-
-
-
-
-
-
-
-
-*/

@@ -10,11 +10,11 @@ public class IntakeHingePiston {
 		mPiston = pPiston;
 	}
 
-	public void Up() {
+	public void up() {
 		mPiston.set(HingeConstants.Piston.UP);
 	}
 
-	public void Down() {
+	public void down() {
 		mPiston.set(HingeConstants.Piston.DOWN);
 	}
 }

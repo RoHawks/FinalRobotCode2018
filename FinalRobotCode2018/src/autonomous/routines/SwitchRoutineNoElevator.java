@@ -20,20 +20,21 @@ import robotcode.systems.Grabber;
 import robotcode.systems.Grabber.GrabberState;
 import robotcode.systems.Intake;
 import robotcode.systems.IntakeHingeMotor;
+import robotcode.systems.IntakeHingePiston;
 
 public class SwitchRoutineNoElevator implements AutonomousRoutine {
 	
 	private DriveTrain mDriveTrain;
 	private Elevator mElevator;
 	private Grabber mGrabber;
-	private IntakeHingeMotor mHinge;
+	private IntakeHingePiston mHinge;
 	private Intake mIntake;
 	
-	public SwitchRoutineNoElevator(DriveTrain pDriveTrain, Elevator pElevator, Grabber pGrabber, IntakeHingeMotor pHinge, Intake pIntake) {
+	public SwitchRoutineNoElevator(DriveTrain pDriveTrain, Elevator pElevator, Grabber pGrabber, IntakeHingePiston mHinge2, Intake pIntake) {
 		mDriveTrain = pDriveTrain;
 		mElevator = pElevator;
 		mGrabber = pGrabber;
-		mHinge = pHinge;
+		mHinge = mHinge2;
 		mIntake = pIntake;
 	}
 

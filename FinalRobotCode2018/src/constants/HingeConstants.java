@@ -53,7 +53,7 @@ public class HingeConstants {
 	
 	public static class Piston {
 		public static final Value 
-			UP = Value.kForward, 
-			DOWN = Value.kReverse;
+			UP = Value.kReverse, 
+			DOWN = Value.kForward;
 	}
 }

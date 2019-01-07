@@ -9,6 +9,7 @@ import robotcode.systems.Grabber;
 import robotcode.systems.Grabber.GrabberState;
 import robotcode.systems.Intake;
 import robotcode.systems.IntakeHingeMotor;
+import robotcode.systems.IntakeHingePiston;
 
 public class StraightLineDriveCombinedCommand extends BaseAutonomousCommand {
 
@@ -29,14 +30,14 @@ public class StraightLineDriveCombinedCommand extends BaseAutonomousCommand {
 	private Intake mIntake;
 	private boolean mRunningWheels;
 
-	private IntakeHingeMotor mHinge;
+	private IntakeHingePiston mHinge;
 	private boolean mUp;
 	private long mHingeDelay;
 	
 	public StraightLineDriveCombinedCommand(DriveTrain pDriveTrain, Elevator pElevator, double pElevatorHeight,
 			Grabber pGrabber, GrabberState pGrabberState, double pAngle, double pFinalVelocity, long pTotalMillisecondsAccel,
 			long pTotalMillisecondsFull, long pTotalMillisecondsDecel, Intake pIntake, boolean pRunningWheels,
-			IntakeHingeMotor pHinge, boolean pUp, long pHingeDelay) {
+			IntakeHingePiston mHinge2, boolean pUp, long pHingeDelay) {
 
 		mElevator = pElevator;
 		mElevatorHeight = pElevatorHeight;
@@ -54,7 +55,7 @@ public class StraightLineDriveCombinedCommand extends BaseAutonomousCommand {
 		mIntake = pIntake;
 		mRunningWheels = pRunningWheels;
 
-		mHinge = pHinge;
+		mHinge = mHinge2;
 		mUp = pUp;
 		mHingeDelay = pHingeDelay;
 	}

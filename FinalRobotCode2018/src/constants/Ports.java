@@ -31,7 +31,7 @@ public class Ports {
 		public static final int 
 			RIGHT_INTAKE_HINGE = 16,
 			LEFT_INTAKE_HINGE = 12,
-			HINGE_PISTON = 0;
+			HINGE_PISTON = 7;
 	}
 	
 	public static class Elevator {
@@ -52,7 +52,7 @@ public class Ports {
 
 	// controllers
 	public static final int
-		XBOX = 5, //was 0 before for 360 controller, 5 is for xbox one controller
+		XBOX = 0, //was 0 before for 360 controller, 5 is for xbox one controller
 		JOYSTICK = 1;
 
 	public static final int COMPRESSOR = 0;

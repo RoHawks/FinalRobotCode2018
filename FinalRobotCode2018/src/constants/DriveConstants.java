@@ -15,7 +15,7 @@ public class DriveConstants {
 
 	public static final double 
 			MAX_ANGULAR_VEL = 1.0,
-			MAX_LINEAR_VEL = 0.8;
+			MAX_LINEAR_VEL = 0.5;
 
 	public static class SwerveSpeeds {
 		public static final double 
@@ -28,7 +28,7 @@ public class DriveConstants {
 	public static class Modules {
 		public static final boolean[]
 			TURN_INVERTED = new boolean[] { false, false, false, false }, //old values {false, false, false, true}
-			DRIVE_INVERTED = new boolean[] { true, false, false, false }, // assuming this is DRIVE_REVERSED old values {false, false, false, false }
+			DRIVE_INVERTED = new boolean[] { false, false, false, true }, // assuming this is DRIVE_REVERSED old values {false, false, false, false }
 			ENCODER_REVERSED = new boolean[] { true, true, true, true }; //old values {true, true, true, false}
 		
 		public static final double[] 
